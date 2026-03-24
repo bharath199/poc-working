@@ -4,11 +4,14 @@ import os
 import numpy as np
 import cv2
 import json
+
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
 import torch
 import torchvision.models as models
 import torchvision.transforms as T
-
 # -----------------------------
 # CONFIG
 # -----------------------------

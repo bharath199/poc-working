@@ -12,15 +12,20 @@ import matplotlib.pyplot as plt
 import torch
 import torchvision.models as models
 import torchvision.transforms as T
+
 # -----------------------------
 # CONFIG
 # -----------------------------
-OUTPUT_ROOT = "./output"
-JSON_LIST = "good_jsons.txt"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# DATA_ROOT = os.path.join(BASE_DIR, "output")
+DATA_ROOT = os.path.join(BASE_DIR, "data", "demo")
+JSON_LIST = os.path.join(BASE_DIR, "good_jsons.txt")
 BASELINE_N = 5
 
+st.set_page_config(layout="wide")
+
 # -----------------------------
-# MODEL (cached)
+# MODEL (load once)
 # -----------------------------
 @st.cache_resource
 def load_model():
@@ -38,19 +43,33 @@ transform = T.Compose([
 ])
 
 # -----------------------------
-# HELPERS
+# DATA
 # -----------------------------
+@st.cache_data
 def get_sequences():
-    return sorted(glob.glob(os.path.join(OUTPUT_ROOT, "WIN_*")))
+    seqs = sorted(glob.glob(os.path.join(DATA_ROOT, "WIN_*")))
+    return seqs
 
-def load_images(seq_dir):
-    paths = sorted(glob.glob(os.path.join(seq_dir, "*.png")))
-    imgs = [cv2.imread(p) for p in paths]
-    return imgs
+@st.cache_data
+def load_image_paths(seq_dir):
+    exts = ["*.jpg", "*.png", "*.jpeg"]
+    paths = []
 
+    for ext in exts:
+        paths.extend(glob.glob(os.path.join(seq_dir, ext)))
+
+    return sorted(paths)
+
+def read_image(path):
+    return cv2.imread(path)
+
+@st.cache_data
 def get_json_for_sequence(seq_dir):
     name = os.path.basename(seq_dir)
     json_name = name + ".json"
+
+    if not os.path.exists(JSON_LIST):
+        return None
 
     with open(JSON_LIST, "r") as f:
         paths = f.read().splitlines()
@@ -61,54 +80,70 @@ def get_json_for_sequence(seq_dir):
     return None
 
 # -----------------------------
-# MASK LOADING
+# MASK
 # -----------------------------
 @st.cache_data
-def load_mask_and_bbox(json_path, image_shape):
+def load_mask_and_bbox(json_path, original_shape, new_shape):
+    import json
+    import numpy as np
+    import cv2
+
     with open(json_path, "r") as f:
         data = json.load(f)
 
-    poor_points = None
-    for shape in data["shapes"]:
-        if shape["label"] == "poor_solder":
-            poor_points = shape["points"]
+    poor = None
+    for s in data["shapes"]:
+        if s["label"] == "poor_solder":
+            poor = s["points"]
 
-    mask = np.zeros(image_shape[:2], dtype=np.uint8)
-    pts = np.array(poor_points, dtype=np.int32)
+    if poor is None:
+        raise ValueError("No poor_solder label found")
+
+    h0, w0 = original_shape[:2]
+    h1, w1 = new_shape[:2]
+
+    scale_x = w1 / w0
+    scale_y = h1 / h0
+
+    scaled_pts = [[int(x * scale_x), int(y * scale_y)] for x, y in poor]
+
+    mask = np.zeros((h1, w1), dtype=np.uint8)
+    pts = np.array(scaled_pts, dtype=np.int32)
+
     cv2.fillPoly(mask, [pts], 1)
 
     ys, xs = np.where(mask == 1)
-    y1, y2 = ys.min(), ys.max()
-    x1, x2 = xs.min(), xs.max()
 
-    return mask, (y1, y2, x1, x2)
+    if len(ys) == 0:
+        raise ValueError("Empty mask after scaling")
 
-def extract_region(img, mask, bbox):
-    y1, y2, x1, x2 = bbox
-    crop = img[y1:y2, x1:x2]
-    crop_mask = mask[y1:y2, x1:x2]
-    return crop, crop_mask
+    return mask, (ys.min(), ys.max(), xs.min(), xs.max())
 
-def overlay_mask(img, mask, color=(0,255,0), alpha=0.4):
+def overlay_mask(img, mask):
     overlay = img.copy()
-    overlay[mask == 1] = color
-    return cv2.addWeighted(overlay, alpha, img, 1-alpha, 0)
+    overlay[mask == 1] = (0, 255, 0)
+    return cv2.addWeighted(overlay, 0.4, img, 0.6, 0)
 
 # -----------------------------
-# DRIFT MODEL
+# DRIFT
 # -----------------------------
-def combined_drift_score(images, mask, bbox):
+@st.cache_data
+def compute_scores(image_paths, mask, bbox):
 
     res_feats = []
     hand_feats = []
 
-    for img in images:
-        crop, crop_mask = extract_region(img, mask, bbox)
+    for p in image_paths:
+        img = cv2.imread(p)
 
-        # ---- ResNet
+        y1, y2, x1, x2 = bbox
+        crop = img[y1:y2, x1:x2]
+        crop_mask = mask[y1:y2, x1:x2]
+
+        # ResNet
         masked = crop.copy()
         masked[crop_mask == 0] = 0
-        resized = cv2.resize(masked, (224,224))
+        resized = cv2.resize(masked, (224, 224))
 
         x = transform(resized).unsqueeze(0)
         with torch.no_grad():
@@ -116,26 +151,25 @@ def combined_drift_score(images, mask, bbox):
 
         res_feats.append(feat)
 
-        # ---- Handcrafted
+        # Handcrafted
         gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
         region = gray[crop_mask == 1]
 
-        area = np.sum(crop_mask)
-        mean = region.mean()
-        std = region.std()
-        sharp = cv2.Laplacian(gray, cv2.CV_64F).var()
-
-        hand_feats.append([area, mean, std, sharp])
+        hand_feats.append([
+            np.sum(crop_mask),
+            region.mean(),
+            region.std(),
+            cv2.Laplacian(gray, cv2.CV_64F).var()
+        ])
 
     res_feats = np.array(res_feats)
     hand_feats = np.array(hand_feats)
 
     # normalize handcrafted
-    hand_feats = (hand_feats - hand_feats.mean(axis=0)) / (hand_feats.std(axis=0) + 1e-6)
+    hand_feats = (hand_feats - hand_feats.mean(0)) / (hand_feats.std(0) + 1e-6)
 
-    # baseline
-    res_base = res_feats[:BASELINE_N].mean(axis=0)
-    hand_base = hand_feats[:BASELINE_N].mean(axis=0)
+    res_base = res_feats[:BASELINE_N].mean(0)
+    hand_base = hand_feats[:BASELINE_N].mean(0)
 
     def cosine(a, b):
         return 1 - np.dot(a, b) / (np.linalg.norm(a)*np.linalg.norm(b) + 1e-8)
@@ -143,52 +177,51 @@ def combined_drift_score(images, mask, bbox):
     res_scores = np.array([cosine(f, res_base) for f in res_feats])
     hand_scores = np.array([np.linalg.norm(f - hand_base) for f in hand_feats])
 
-    # normalize (for visualization)
+    # normalize
     res_scores = (res_scores - res_scores.min()) / (res_scores.max() - res_scores.min() + 1e-8)
     hand_scores = (hand_scores - hand_scores.min()) / (hand_scores.max() - hand_scores.min() + 1e-8)
 
     combined = 0.6 * res_scores + 0.4 * hand_scores
 
-    # smoothing
-    def ema(x, alpha=0.3):
-        s = x[0]
-        out = []
-        for v in x:
-            s = alpha*v + (1-alpha)*s
-            out.append(s)
-        return np.array(out)
+    # EMA smoothing
+    smoothed = []
+    s = combined[0]
+    for v in combined:
+        s = 0.3*v + 0.7*s
+        smoothed.append(s)
 
-    return ema(combined)
+    return np.array(smoothed)
+
+# -----------------------------
+# LOAD PRECOMPUTED (if exists)
+# -----------------------------
+def load_scores_if_available(seq_dir):
+    path = os.path.join(seq_dir, "scores.npy")
+    if os.path.exists(path):
+        return np.load(path)
+    return None
 
 # -----------------------------
 # PLOT
 # -----------------------------
-def plot_drift(scores):
+def plot(scores):
 
     n = len(scores)
-
     aoi = np.zeros(n)
     aoi[int(n*0.8):] = 1
 
     baseline = scores[:BASELINE_N].mean()
-    alert_line = baseline + 0.2
-
-    trend = np.gradient(scores)
-    alerts = (scores > alert_line) & (trend > 0)
+    alert = baseline + 0.2
 
     fig, ax = plt.subplots(figsize=(8,4))
 
     ax.plot(scores, label="Drift Score")
-    ax.plot(aoi, '--', label="AOI (0=PASS,1=NG)")
-    ax.axhline(alert_line, linestyle=':', label="Alert Threshold")
-
-    for i in range(n):
-        if alerts[i]:
-            ax.scatter(i, scores[i])
+    ax.plot(aoi, '--', label="AOI")
+    ax.axhline(alert, linestyle=':', label="Alert")
 
     ax.set_xlabel("Frame")
     ax.set_ylabel("Score")
-    ax.set_title("Process Drift vs AOI")
+    ax.set_title("Drift vs AOI")
 
     ax.legend()
     ax.grid()
@@ -200,46 +233,66 @@ def plot_drift(scores):
 # -----------------------------
 st.title("SMT Process Drift Demo")
 
-seq_dirs = get_sequences()
+seqs = get_sequences()
 
-if not seq_dirs:
-    st.error("No sequences found")
+if not seqs:
+    st.error("No sequences found in /output")
     st.stop()
 
-selected_seq = st.selectbox("Select Sequence", seq_dirs)
+seq = st.selectbox("Select Sequence", seqs)
+image_paths = load_image_paths(seq)
 
-images = load_images(selected_seq)
-
-json_path = get_json_for_sequence(selected_seq)
-
-if json_path is None:
-    st.error("No matching JSON found")
+if not image_paths:
+    st.error("No images in sequence")
     st.stop()
 
-mask, bbox = load_mask_and_bbox(json_path, images[0].shape)
+# mask
+sample = read_image(image_paths[0])
+json_path = get_json_for_sequence(seq)
 
-scores = combined_drift_score(images, mask, bbox)
+if not json_path:
+    st.error("JSON mapping missing")
+    st.stop()
+
+meta_path = os.path.join(seq, "meta.npy")
+original_shape = np.load(meta_path)
+
+mask, bbox = load_mask_and_bbox(
+    json_path,
+    original_shape,
+    sample.shape
+)
 
 # -----------------------------
-# FRAME VIEW
+# SCORE LOADING (fast path)
 # -----------------------------
-frame_idx = st.slider("Frame", 0, len(images)-1, 0)
+scores = load_scores_if_available(seq)
 
-img = images[frame_idx]
+if scores is None:
+    st.info("Computing scores (first time only)...")
+    scores = compute_scores(image_paths, mask, bbox)
+
+# -----------------------------
+# VIEW
+# -----------------------------
+col1, col2 = st.columns([1,1])
+
+frame = st.slider("Frame", 0, len(image_paths)-1, 0)
+
+img = read_image(image_paths[frame])
 overlay = overlay_mask(img, mask)
 
-st.image(cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB),
-         caption=f"Frame {frame_idx}")
+with col1:
+    st.image(cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB),
+             caption=f"Frame {frame}")
 
-# -----------------------------
-# PLOT
-# -----------------------------
-st.pyplot(plot_drift(scores))
+with col2:
+    st.pyplot(plot(scores))
 
 # -----------------------------
 # STATUS
 # -----------------------------
-current = scores[frame_idx]
+current = scores[frame]
 baseline = scores[:BASELINE_N].mean()
 
 st.metric("Drift Score", f"{current:.3f}")

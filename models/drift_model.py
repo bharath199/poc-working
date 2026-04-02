@@ -9,9 +9,9 @@ import json
 # -----------------------------
 # CONFIG
 # -----------------------------
-IMAGE_PATH = "./SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.jpg"
-JSON_PATH  = "./SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.json"
-SEQ_GLOB   = "./output_seq_blend/*.png"
+IMAGE_PATH = "./data_local/SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.jpg"
+JSON_PATH  = "./data_local/SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.json"
+SEQ_GLOB   = "./data_local/output/WIN_20220330_13_12_12_Pro/*.png"
 
 BASELINE_N = 5
 
@@ -29,8 +29,24 @@ transform = T.Compose([
 ])
 
 # -----------------------------
-# MASK UTILS
+# UTILITY FUNCTIONS
 # -----------------------------
+def normalize_minmax(x):
+    """Normalize array to [0,1] using min-max scaling"""
+    return (x - x.min()) / (x.max() - x.min() + 1e-8)
+def zscore(x):
+    return (x - np.mean(x[:BASELINE_N])) / (np.std(x[:BASELINE_N]) + 1e-6)
+def safe_z(x):
+    mean = np.mean(x[:BASELINE_N])
+    std = np.std(x[:BASELINE_N])
+    std = max(std, 1e-3)   # clamp
+    return (x - mean) / std
+def percent_change(x):
+    baseline_mean = np.mean(x[:BASELINE_N])
+    return (x - baseline_mean) / (baseline_mean + 1e-6)
+def relative_score(x):
+    baseline_mean = np.mean(x[:BASELINE_N])
+    return x / (baseline_mean + 1e-6)
 def polygon_to_mask(img_shape, points):
     mask = np.zeros(img_shape[:2], dtype=np.uint8)
     pts = np.array(points, dtype=np.int32)
@@ -146,13 +162,13 @@ res_scores = np.array(res_scores)
 hand_scores = np.array(hand_scores)
 
 # normalize both
-res_scores = (res_scores - res_scores.min()) / (res_scores.max() - res_scores.min() + 1e-8)
-hand_scores = (hand_scores - hand_scores.min()) / (hand_scores.max() - hand_scores.min() + 1e-8)
+res_scores = res_scores-np.mean(res_scores[:BASELINE_N])
+hand_scores = hand_scores-np.mean(hand_scores[:BASELINE_N])
 
 # -----------------------------
 # COMBINED SCORE
 # -----------------------------
-combined = 0.6 * res_scores + 0.4 * hand_scores
+combined = 0.6 * normalize_minmax(res_scores) + 0.4 * normalize_minmax(hand_scores)
 
 # -----------------------------
 # SMOOTHING
@@ -175,9 +191,12 @@ trend = np.gradient(combined_s)
 # -----------------------------
 # ALERT
 # -----------------------------
-THRESH = 0.4
+THRESH = np.mean(combined_s[:BASELINE_N]) * 3
 
 alerts = (combined_s > THRESH) & (trend > 0)
+
+from src.plt.plot_drift_vs_aoi import plot_drift_vs_aoi
+plot_drift_vs_aoi(combined_s)
 
 # -----------------------------
 # PRINT

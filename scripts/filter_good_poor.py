@@ -29,7 +29,7 @@ def check_json_labels(json_path):
         return False, []
 
 def main():
-    base_path = Path(r'c:\Users\bhara\Desktop\poc\SolDef_AI\Filtered')
+    base_path = Path(r'c:\Users\bhara\Desktop\poc\data_local\SolDef_AI\Filtered')
     
     # Track results
     good_jsons = []

@@ -21,7 +21,6 @@ IMG_SIZE = (384, 384)
 JPEG_QUALITY = 70
 
 BASELINE_N = 5
-JSON_LIST = "./scripts/good_jsons.txt"
 
 # -----------------------------
 # MODEL
@@ -40,17 +39,20 @@ transform = T.Compose([
 # -----------------------------
 # HELPERS
 # -----------------------------
+import os
+
+JSON_DIR = os.path.join(os.getcwd(), "data", "good_jsons")
+
 def get_json_for_sequence(seq_name):
-    if not os.path.exists(JSON_LIST):
+    if not os.path.exists(JSON_DIR):
         return None
 
-    with open(JSON_LIST, "r") as f:
-        paths = f.read().splitlines()
-
     target = seq_name + ".json"
-    for p in paths:
-        if target in p:
-            return p
+
+    for fname in os.listdir(JSON_DIR):
+        if fname == target:  # exact match (safer than "in")
+            return os.path.join(JSON_DIR, fname)
+
     return None
 
 
@@ -223,9 +225,5 @@ for seq in seqs:
     except Exception as e:
         print(f"⚠ Skipping {seq}: {e}")
         continue
-
-# copy json list
-if os.path.exists(JSON_LIST):
-    shutil.copy(JSON_LIST, os.path.join(DST_ROOT, "good_jsons.txt"))
 
 print("\n✅ Demo dataset ready:", DST_ROOT)

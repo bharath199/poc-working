@@ -21,7 +21,6 @@ import torchvision.transforms as T
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # DATA_ROOT = os.path.join(BASE_DIR, "output")
 DATA_ROOT = os.path.join(BASE_DIR, "..", "data", "demo")
-JSON_LIST = os.path.join(BASE_DIR, "..", "scripts", "good_jsons.txt")
 BASELINE_N = 5
 
 st.set_page_config(layout="wide")
@@ -65,21 +64,17 @@ def load_image_paths(seq_dir):
 def read_image(path):
     return cv2.imread(path)
 
+import os
+import streamlit as st
+
+JSON_DIR = os.path.join(os.getcwd(), "data", "good_jsons")
+
 @st.cache_data
 def get_json_for_sequence(seq_dir):
     name = os.path.basename(seq_dir)
-    json_name = name + ".json"
+    json_path = os.path.join(JSON_DIR, name + ".json")
 
-    if not os.path.exists(JSON_LIST):
-        return None
-
-    with open(JSON_LIST, "r") as f:
-        paths = f.read().splitlines()
-
-    for p in paths:
-        if json_name in p:
-            return p
-    return None
+    return json_path if os.path.exists(json_path) else None
 
 # -----------------------------
 # MASK

@@ -20,8 +20,8 @@ import torchvision.transforms as T
 # -----------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # DATA_ROOT = os.path.join(BASE_DIR, "output")
-DATA_ROOT = os.path.join(BASE_DIR, "data", "demo")
-JSON_LIST = os.path.join(BASE_DIR, "good_jsons.txt")
+DATA_ROOT = os.path.join(BASE_DIR, "..", "data", "demo")
+JSON_LIST = os.path.join(BASE_DIR, "..", "scripts", "good_jsons.txt")
 BASELINE_N = 5
 
 st.set_page_config(layout="wide")

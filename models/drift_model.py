@@ -9,9 +9,9 @@ import json
 # -----------------------------
 # CONFIG
 # -----------------------------
-IMAGE_PATH = "./SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.jpg"
-JSON_PATH  = "./SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.json"
-SEQ_GLOB   = "./output_seq_blend/*.png"
+IMAGE_PATH = "./data_local/SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.jpg"
+JSON_PATH  = "./data_local/SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.json"
+SEQ_GLOB   = "./data_local/output/WIN_20220330_13_12_12_Pro/*.png"
 
 BASELINE_N = 5
 
@@ -195,7 +195,7 @@ THRESH = np.mean(combined_s[:BASELINE_N]) * 3
 
 alerts = (combined_s > THRESH) & (trend > 0)
 
-from plot_drift_vs_aoi import plot_drift_vs_aoi
+from src.plt.plot_drift_vs_aoi import plot_drift_vs_aoi
 plot_drift_vs_aoi(combined_s)
 
 # -----------------------------

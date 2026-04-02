@@ -11,7 +11,7 @@ import torchvision.transforms as T
 # -----------------------------
 # CONFIG
 # -----------------------------
-SRC_ROOT = "./output"
+SRC_ROOT = "./data_local/output"
 DST_ROOT = "./data/demo"
 
 NUM_SEQS = 3
@@ -21,7 +21,7 @@ IMG_SIZE = (384, 384)
 JPEG_QUALITY = 70
 
 BASELINE_N = 5
-JSON_LIST = "good_jsons.txt"
+JSON_LIST = "./scripts/good_jsons.txt"
 
 # -----------------------------
 # MODEL

@@ -2,7 +2,7 @@ import json
 import glob
 import os
 
-folder = r"SolDef_AI/Labeled"
+folder = r"./data_local/SolDef_AI/Labeled"
 files = glob.glob(os.path.join(folder, "*.json"))
 
 all_groups = set()

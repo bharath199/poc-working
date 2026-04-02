@@ -6,8 +6,8 @@ import os
 # -----------------------------
 # CONFIG
 # -----------------------------
-GOOD_JSONS_FILE = "./good_jsons.txt"
-OUTPUT_DIR = "./output"
+GOOD_JSONS_FILE = "good_jsons.txt"
+OUTPUT_DIR = "./data_local/output"
 N_FRAMES   = 30
 MAX_ALPHA  = 0.7   # don't go full defect
 
@@ -86,7 +86,7 @@ def apply_drift_blend(good_patch, poor_patch, good_mask, poor_mask, alpha):
 def generate_sequence_blend(
     image_path,
     json_path,
-    output_dir="./output_seq_blend",
+    output_dir="../data_local/output_seq_blend",
     n_frames=30,
     max_alpha=0.7,
 ):

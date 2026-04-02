@@ -6,9 +6,9 @@ import os
 # -----------------------------
 # CONFIG
 # -----------------------------
-IMAGE_PATH = "./SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.jpg"
-JSON_PATH  = "./SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.json"
-OUTPUT_DIR = "./output_seq"
+IMAGE_PATH = "./data_local/SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.jpg"
+JSON_PATH  = "./data_local/SolDef_AI/Filtered/c1/good/WIN_20220330_13_12_12_Pro.json"
+OUTPUT_DIR = "./data_local/output/output_seq"
 N_FRAMES   = 30
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -147,4 +147,4 @@ for t in range(N_FRAMES):
 
     cv2.imwrite(f"{OUTPUT_DIR}/frame_{t:03d}.png", frame)
 
-print("Done. Check output_seq/")
+print("Done. Check ./data_local/output/output_seq/")

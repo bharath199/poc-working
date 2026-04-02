@@ -14,7 +14,8 @@ import torchvision.transforms as T
 SRC_ROOT = "./output"
 DST_ROOT = "./data/demo"
 
-NUM_SEQS = 2
+NUM_SEQS = 3
+SEQ_STRIDE = 3  # Select every nth sequence
 NUM_FRAMES = 10
 IMG_SIZE = (384, 384)
 JPEG_QUALITY = 70
@@ -151,9 +152,12 @@ def compute_scores(images, mask, bbox):
 # -----------------------------
 # MAIN
 # -----------------------------
+#delte old demo data
+if os.path.exists(DST_ROOT):
+    shutil.rmtree(DST_ROOT)
 os.makedirs(DST_ROOT, exist_ok=True)
 
-seqs = sorted([d for d in os.listdir(SRC_ROOT) if d.startswith("WIN_")])[:NUM_SEQS]
+seqs = sorted([d for d in os.listdir(SRC_ROOT) if d.startswith("WIN_")])[::SEQ_STRIDE][:NUM_SEQS]
 
 print(f"Processing {len(seqs)} sequences...")
 

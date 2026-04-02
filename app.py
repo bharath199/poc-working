@@ -1,3 +1,5 @@
+from genericpath import isfile
+
 import streamlit as st
 import glob
 import os
@@ -255,7 +257,10 @@ if not json_path:
     st.stop()
 
 meta_path = os.path.join(seq, "meta.npy")
-original_shape = np.load(meta_path)
+if isfile(meta_path):
+    original_shape = np.load(meta_path)
+else:
+    original_shape = sample.shape
 
 mask, bbox = load_mask_and_bbox(
     json_path,

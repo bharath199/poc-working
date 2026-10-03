@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vikshepa Technologies — Inspection and Measurement for Advanced Semiconductor Packaging</title>
-<meta name="description" content="Vikshepa Technologies is building optical inspection and measurement tools for advanced semiconductor packaging, and uses AI to improve the R&amp;D of those tools.">
+<title>Vikshepa Technologies — Inspection and Measurement for Advanced Chip Packaging</title>
+<meta name="description" content="Vikshepa Technologies, Chennai, is building optical tools that find defects and measure bump height in advanced chip packages, starting with flip-chip packaging.">
 <link rel="icon" type="image/png" href="assets/Vikshepa_logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,7 +72,7 @@
     max-width: 880px;
   }
   .hero h1 em { font-style: italic; color: var(--blue); font-weight: 400; }
-  .hero .lede { margin: 30px 0 0; max-width: 560px; font-size: 1.22rem; color: var(--ink-2); }
+  .hero .lede { margin: 30px 0 0; max-width: 540px; font-size: 1.22rem; color: var(--ink-2); }
   .hero-actions { margin-top: 38px; display: flex; gap: 14px; flex-wrap: wrap; }
   .btn {
     display: inline-flex; align-items: center; gap: 10px;
@@ -95,32 +95,42 @@
     .glance { grid-template-columns: 1fr; }
     .glance > div, .glance > div + div { padding: 16px 0; border-left: 0; border-bottom: 1px solid var(--line); }
   }
-  .founder-line {
-    margin-top: 40px; padding-top: 0; max-width: 640px;
-    border-top: 1px solid var(--line);
-    color: var(--ink-2); font-size: 0.98rem;
-  }
   .rings {
     position: absolute; z-index: 1; right: -200px; top: -80px;
     width: 900px; height: 900px; opacity: .9; pointer-events: none;
   }
+  .ripple { transform-box: view-box; transform-origin: 450px 450px; animation: ripple 6s ease-out infinite; }
+  @keyframes ripple { 0% { transform: scale(.04); opacity: .7; } 100% { transform: scale(1); opacity: 0; } }
   @media (max-width: 900px) { .rings { right: -420px; opacity: .45; } }
 
   /* sections */
-  section.block { padding: 104px 0; border-top: 1px solid var(--line); }
+  section.block { padding: 96px 0; border-top: 1px solid var(--line); }
   .sec-head { display: grid; grid-template-columns: 220px 1fr; gap: 32px; }
   .sec-head .num { color: var(--blue); padding-top: 14px; }
   .sec-head h2 { font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1.1; max-width: 760px; }
   @media (max-width: 820px) { .sec-head { grid-template-columns: 1fr; gap: 10px; } }
-  .sec-body { margin-left: 252px; margin-top: 40px; max-width: 680px; }
+  .sec-body { margin-left: 252px; margin-top: 24px; max-width: 620px; }
   @media (max-width: 820px) { .sec-body { margin-left: 0; } }
-  .sec-body p { margin: 0 0 20px; color: var(--ink-2); font-size: 1.15rem; }
-  .sec-body p:first-child { color: var(--ink); }
+  .sec-body p { margin: 0; color: var(--ink-2); font-size: 1.15rem; }
 
-  /* how we work */
+  /* sketches */
+  .figure { margin: 44px 0 0 252px; max-width: 820px; }
+  @media (max-width: 820px) { .figure { margin-left: 0; } }
+  .sketch { display: block; width: 100%; height: auto; }
+  .sketch text, .icon text { font-family: 'JetBrains Mono', monospace; letter-spacing: .08em; }
+  @media (max-width: 640px) {
+    .sketch text { font-size: 20px; }
+    .sketch.loop text { font-size: 17px; }
+  }
+  .pulse { animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+  .scan { animation: scan 7s linear infinite; }
+  @keyframes scan { 0% { transform: translateX(0); } 80%, 100% { transform: translateX(620px); } }
+
+  /* cards */
   .alt { background: var(--paper-2); }
   .cards {
-    margin: 56px 0 0 252px;
+    margin: 48px 0 0 252px;
     display: grid; grid-template-columns: repeat(3, 1fr);
     border-top: 1px solid var(--ink);
   }
@@ -132,25 +142,28 @@
     .card + .card { border-top: 1px solid var(--line); }
   }
   .card .i { color: var(--blue); }
-  .card h3 { margin-top: 14px; font-size: 1.4rem; line-height: 1.2; }
-  .card p { margin: 14px 0 0; color: var(--ink-2); font-size: 1.02rem; }
+  .card .icon { display: block; width: 160px; height: auto; margin-top: 18px; }
+  .card h3 { margin-top: 18px; font-size: 1.4rem; line-height: 1.2; }
+  .card p { margin: 10px 0 0; color: var(--ink-2); font-size: 1.02rem; }
 
   /* team */
   .person { margin: 48px 0 0 252px; }
   @media (max-width: 820px) { .person { margin-left: 0; } }
   .person h3 { font-size: 2rem; }
   .person .role { color: var(--blue); margin-top: 6px; display: block; }
-  .timeline { list-style: none; padding: 0; margin: 36px 0 0; max-width: 760px; border-top: 1px solid var(--line); }
+  .person .bio { margin: 20px 0 0; max-width: 620px; color: var(--ink); font-size: 1.12rem; }
+  .timeline { list-style: none; padding: 0; margin: 32px 0 0; max-width: 760px; border-top: 1px solid var(--line); }
   .timeline li {
-    padding: 18px 0; border-bottom: 1px solid var(--line);
-    color: var(--ink-2); font-size: 1.02rem;
+    padding: 14px 0; border-bottom: 1px solid var(--line);
+    color: var(--ink-2); font-size: 1rem;
   }
+  .timeline b { color: var(--ink); font-weight: 500; }
 
   /* contact */
   .contact { background: var(--night); color: #e8eef5; border-top: 0 !important; }
   .contact .sec-head .num { color: #7fb0ff; }
   .contact h2 { color: #fff; font-size: clamp(2.4rem, 6vw, 4.6rem); }
-  .contact-company { margin: 28px 0 0 252px; color: #9fb0c2; }
+  .contact-company { margin: 28px 0 0 252px; max-width: 620px; color: #9fb0c2; }
   @media (max-width: 820px) { .contact-company { margin-left: 0; } }
   .contact-grid {
     margin: 48px 0 0 252px;
@@ -167,6 +180,11 @@
   footer { background: var(--night); border-top: 1px solid #1f3146; padding: 28px 0; color: #8fa1b3; font-size: 0.9rem; }
   footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   footer p { margin: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ripple, .pulse, .scan { animation: none; }
+    .ripple, .cover { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -178,8 +196,9 @@
       <span>Vikshepa Technologies</span>
     </a>
     <nav>
-      <a href="#what-we-do">What we do</a>
-      <a href="#how-we-work">How we work</a>
+      <a href="#problem">The problem</a>
+      <a href="#first-tool">First tool</a>
+      <a href="#roadmap">Roadmap</a>
       <a href="#team">Team</a>
       <a href="#contact" class="nav-cta">Contact</a>
     </nav>
@@ -199,6 +218,7 @@
       <circle cx="450" cy="450" r="355" opacity=".3"/>
       <circle cx="450" cy="450" r="425" opacity=".2"/>
     </g>
+    <circle class="ripple" cx="450" cy="450" r="425" stroke="#0b57d0" stroke-width="2"/>
     <circle cx="450" cy="450" r="14" fill="#0b57d0"/>
     <g stroke="#0b1b2b" stroke-width=".8" opacity=".25">
       <line x1="0" y1="450" x2="900" y2="450"/>
@@ -206,56 +226,223 @@
     </g>
   </svg>
   <div class="wrap">
-    <p class="mono tag">Advanced Semiconductor Packaging</p>
-    <h1>Optical tools to inspect and measure <em>advanced chip packages</em></h1>
-    <p class="lede">Advanced packaging is where chips are assembled into the packages that go into devices. We are building optical tools to inspect and measure those packages, and we use AI to improve the R&amp;D of the tools themselves.</p>
+    <p class="mono tag">Advanced chip packaging &middot; Chennai</p>
+    <h1>Checking every connection inside <em>advanced chip packages</em></h1>
+    <p class="lede">Optical tools that find defects and measure the height of every solder bump, starting with flip-chip packaging.</p>
     <div class="hero-actions">
       <a href="#contact" class="btn btn-primary">Talk to us &rarr;</a>
-      <a href="#what-we-do" class="btn btn-secondary">What we do</a>
+      <a href="#first-tool" class="btn btn-secondary">See the first tool</a>
     </div>
     <dl class="glance">
-      <div><dt class="mono">Focus</dt><dd>Advanced semiconductor packaging</dd></div>
-      <div><dt class="mono">Method</dt><dd>Optical inspection and measurement</dd></div>
-      <div><dt class="mono">Stage</dt><dd>In development</dd></div>
+      <div><dt class="mono">Focus</dt><dd>Advanced chip packaging</dd></div>
+      <div><dt class="mono">First tool</dt><dd>Defect inspection and 3D bump height</dd></div>
+      <div><dt class="mono">Stage</dt><dd>First prototype in development</dd></div>
     </dl>
   </div>
 </section>
 
-<section class="block" id="what-we-do">
+<section class="block" id="problem">
   <div class="wrap">
     <div class="sec-head">
-      <p class="mono num">01 / What we do</p>
-      <h2>Looking closely at the packages that hold modern chips</h2>
+      <p class="mono num">01 / The problem</p>
+      <h2>Thousands of tiny bumps. One bad one is enough.</h2>
+    </div>
+    <div class="figure">
+      <svg class="sketch" viewBox="0 0 760 240" role="img" aria-label="Side view of a chip mounted face-down on a row of solder bumps, with one bump missing and one too short to make contact">
+        <rect x="130" y="30" width="500" height="56" rx="4" fill="#ece9e1" stroke="#0b1b2b" stroke-width="1.5"/>
+        <text x="380" y="63" text-anchor="middle" font-size="13" fill="#4a5a6a">CHIP, FACE-DOWN</text>
+        <g fill="#cfe0fb" stroke="#0b57d0" stroke-width="1.5">
+          <ellipse cx="170" cy="108" rx="18" ry="22"/>
+          <ellipse cx="222.5" cy="108" rx="18" ry="22"/>
+          <ellipse cx="275" cy="108" rx="18" ry="22"/>
+          <ellipse cx="380" cy="108" rx="18" ry="22"/>
+          <ellipse cx="432.5" cy="108" rx="18" ry="22"/>
+          <ellipse cx="537.5" cy="108" rx="18" ry="22"/>
+          <ellipse cx="590" cy="108" rx="18" ry="22"/>
+        </g>
+        <g class="pulse">
+          <ellipse cx="327.5" cy="108" rx="18" ry="22" fill="none" stroke="#d9480f" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <ellipse cx="485" cy="119" rx="18" ry="11" fill="#fbe3d6" stroke="#d9480f" stroke-width="1.5"/>
+        </g>
+        <rect x="90" y="130" width="580" height="44" rx="3" fill="none" stroke="#0b1b2b" stroke-width="1.5"/>
+        <text x="380" y="157" text-anchor="middle" font-size="13" fill="#4a5a6a">PACKAGE</text>
+        <g stroke="#d9480f" stroke-width="1">
+          <line x1="327.5" y1="178" x2="327.5" y2="200"/>
+          <line x1="485" y1="178" x2="485" y2="200"/>
+        </g>
+        <g font-size="13" fill="#d9480f" text-anchor="middle">
+          <text x="327.5" y="220">MISSING</text>
+          <text x="485" y="220">TOO SHORT</text>
+        </g>
+      </svg>
     </div>
     <div class="sec-body">
-      <p>A modern device often relies on more than one chip. In advanced packaging, chips are assembled into a single package, with very fine connections between them. The smaller and denser these packages become, the more carefully each step has to be checked.</p>
-      <p>That is where our work fits. We are developing optical tools that inspect and measure packages, using light to look closely at them, so the people making packages can see what is happening at each step.</p>
+      <p>Bumps keep getting smaller and denser, so bad ones get harder to catch. Most inspection machines are imported, just as India's packaging plants are starting up.</p>
     </div>
   </div>
 </section>
 
-<section class="block alt" id="how-we-work">
+<section class="block alt" id="first-tool">
   <div class="wrap">
     <div class="sec-head">
-      <p class="mono num">02 / How we work</p>
-      <h2>Three things shape how we build</h2>
+      <p class="mono num">02 / First tool</p>
+      <h2>Find the defects. Measure every bump.</h2>
+    </div>
+    <div class="figure">
+      <svg class="sketch" viewBox="0 0 760 330" role="img" aria-label="Light sweeps across a row of bumps and a height chart builds up behind it, showing one short bump and one missing bump">
+        <defs>
+          <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0b57d0" stop-opacity=".35"/>
+            <stop offset="1" stop-color="#0b57d0" stop-opacity=".08"/>
+          </linearGradient>
+        </defs>
+        <!-- part, side view -->
+        <line x1="60" y1="150" x2="700" y2="150" stroke="#0b1b2b" stroke-width="1.5"/>
+        <g fill="#cfe0fb" stroke="#0b57d0" stroke-width="1.5">
+          <path d="M74 150 A16 18 0 0 1 106 150 Z"/>
+          <path d="M126 150 A16 18 0 0 1 158 150 Z"/>
+          <path d="M178 150 A16 18 0 0 1 210 150 Z"/>
+          <path d="M230 150 A16 18 0 0 1 262 150 Z"/>
+          <path d="M334 150 A16 18 0 0 1 366 150 Z"/>
+          <path d="M386 150 A16 18 0 0 1 418 150 Z"/>
+          <path d="M438 150 A16 18 0 0 1 470 150 Z"/>
+          <path d="M542 150 A16 18 0 0 1 574 150 Z"/>
+          <path d="M594 150 A16 18 0 0 1 626 150 Z"/>
+          <path d="M646 150 A16 18 0 0 1 678 150 Z"/>
+        </g>
+        <path d="M282 150 A16 9 0 0 1 314 150 Z" fill="#fbe3d6" stroke="#d9480f" stroke-width="1.5"/>
+        <path d="M490 150 A16 18 0 0 1 522 150" fill="none" stroke="#d9480f" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <text x="60" y="176" font-size="12" fill="#4a5a6a">PART, SIDE VIEW</text>
+
+        <!-- height chart -->
+        <text x="60" y="214" font-size="12" fill="#4a5a6a">MEASURED HEIGHT</text>
+        <line x1="60" y1="290" x2="700" y2="290" stroke="#0b1b2b" stroke-width="1"/>
+        <g fill="#0b57d0">
+          <rect x="80" y="230" width="20" height="60"/>
+          <rect x="132" y="230" width="20" height="60"/>
+          <rect x="184" y="230" width="20" height="60"/>
+          <rect x="236" y="230" width="20" height="60"/>
+          <rect x="340" y="230" width="20" height="60"/>
+          <rect x="392" y="230" width="20" height="60"/>
+          <rect x="444" y="230" width="20" height="60"/>
+          <rect x="548" y="230" width="20" height="60"/>
+          <rect x="600" y="230" width="20" height="60"/>
+          <rect x="652" y="230" width="20" height="60"/>
+        </g>
+        <rect x="288" y="260" width="20" height="30" fill="#d9480f"/>
+        <path d="M499 277 l14 14 M513 277 l-14 14" stroke="#d9480f" stroke-width="2"/>
+        <g font-size="12" fill="#d9480f" text-anchor="middle">
+          <text x="298" y="312">SHORT</text>
+          <text x="506" y="312">MISSING</text>
+        </g>
+
+        <!-- cover hides the chart until the light has passed -->
+        <rect class="scan cover" x="70" y="200" width="720" height="125" fill="#ece9e1"/>
+
+        <!-- moving light -->
+        <g transform="translate(70 0)">
+          <g class="scan">
+            <polygon points="0,46 -28,150 28,150" fill="url(#beam)"/>
+            <line x1="0" y1="46" x2="0" y2="150" stroke="#0b57d0" stroke-width="1" stroke-dasharray="3 4"/>
+            <rect x="-16" y="18" width="32" height="28" rx="3" fill="#0b1b2b"/>
+            <circle cx="0" cy="32" r="6" fill="#cfe0fb"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="sec-body">
+      <p>Light sweeps across the part. The tool flags visible defects and measures the height of every bump in 3D. In development, with specifications set together with the plants that will use it.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="roadmap">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="mono num">03 / Roadmap</p>
+      <h2>One tool at a time</h2>
     </div>
     <div class="cards">
       <div class="card">
-        <span class="mono i">A</span>
-        <h3>Measurement first</h3>
-        <p>We are building optical tools for packaging. Their job is to measure and inspect, and everything we develop is judged by how well it does that.</p>
+        <span class="mono i">Now</span>
+        <svg class="icon" viewBox="0 0 160 90" aria-hidden="true">
+          <line x1="10" y1="72" x2="150" y2="72" stroke="#0b1b2b" stroke-width="1.5"/>
+          <g fill="#cfe0fb" stroke="#0b57d0" stroke-width="1.5">
+            <path d="M24 72 A14 18 0 0 1 52 72 Z"/>
+            <path d="M64 72 A14 18 0 0 1 92 72 Z"/>
+            <path d="M104 72 A14 18 0 0 1 132 72 Z"/>
+          </g>
+          <line x1="14" y1="54" x2="140" y2="54" stroke="#0b57d0" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M146 54 v18 M142 58 l4 -4 l4 4 M142 68 l4 4 l4 -4" fill="none" stroke="#0b1b2b" stroke-width="1.2"/>
+        </svg>
+        <h3>Defects and bump height</h3>
+        <p>Every bump checked and measured.</p>
       </div>
       <div class="card">
-        <span class="mono i">B</span>
-        <h3>AI inside our R&amp;D</h3>
-        <p>We use AI to improve the research and development of the tools themselves, so the tools get better as we develop them.</p>
+        <span class="mono i">Next</span>
+        <svg class="icon" viewBox="0 0 160 90" aria-hidden="true">
+          <rect x="10" y="8" width="140" height="74" fill="none" stroke="#0b1b2b" stroke-width="1.5"/>
+          <rect x="52" y="22" width="42" height="42" fill="none" stroke="#0b57d0" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <rect x="62" y="30" width="42" height="42" fill="#cfe0fb" stroke="#0b57d0" stroke-width="1.5"/>
+          <path d="M73 43 l10 8" stroke="#d9480f" stroke-width="1.5"/>
+          <circle cx="73" cy="43" r="2" fill="#0b57d0"/>
+          <circle cx="83" cy="51" r="2" fill="#d9480f"/>
+        </svg>
+        <h3>Chip position</h3>
+        <p>Where each chip actually landed, versus where it should be. Also for photonic chips.</p>
       </div>
       <div class="card">
-        <span class="mono i">C</span>
-<h3>Plain about where we are</h3>
-        <p>We are developing these tools, and we describe them that way. The details of our method stay private.</p>
+        <span class="mono i">Later</span>
+        <svg class="icon" viewBox="0 0 160 90" aria-hidden="true">
+          <rect x="50" y="15" width="60" height="60" fill="none" stroke="#0b1b2b" stroke-width="1.5"/>
+          <rect x="70" y="27" width="28" height="28" fill="#cfe0fb" stroke="#0b57d0" stroke-width="1.5"/>
+          <line x1="80" y1="45" x2="84" y2="41" stroke="#d9480f" stroke-width="1.5"/>
+          <circle cx="80" cy="45" r="2" fill="#0b1b2b"/>
+          <circle cx="84" cy="41" r="2" fill="#d9480f"/>
+        </svg>
+        <h3>Layer alignment</h3>
+        <p>How precisely each layer lines up with the one below. Packaging first, then chip-making.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="block alt" id="how-we-build">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="mono num">04 / How we build</p>
+      <h2>AI in our R&amp;D, with a record of where it fails</h2>
+    </div>
+    <div class="figure">
+      <svg class="sketch loop" viewBox="0 0 760 150" role="img" aria-label="A loop: predict, run, compare, log AI errors, then the next experiment">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" fill="#0b1b2b"/>
+          </marker>
+        </defs>
+        <g fill="#f6f4ef" stroke="#0b1b2b" stroke-width="1.5">
+          <rect x="20" y="24" width="150" height="48" rx="24"/>
+          <rect x="210" y="24" width="150" height="48" rx="24"/>
+          <rect x="400" y="24" width="150" height="48" rx="24"/>
+          <rect x="590" y="24" width="150" height="48" rx="24" stroke="#d9480f"/>
+        </g>
+        <g font-size="13" fill="#0b1b2b" text-anchor="middle">
+          <text x="95" y="53">PREDICT</text>
+          <text x="285" y="53">RUN</text>
+          <text x="475" y="53">COMPARE</text>
+          <text x="665" y="53" fill="#d9480f">LOG AI ERRORS</text>
+        </g>
+        <g stroke="#0b1b2b" stroke-width="1.5" fill="none" marker-end="url(#arr)">
+          <line x1="172" y1="48" x2="206" y2="48"/>
+          <line x1="362" y1="48" x2="396" y2="48"/>
+          <line x1="552" y1="48" x2="586" y2="48"/>
+          <path d="M665 74 V112 H95 V78"/>
+        </g>
+        <text x="380" y="134" font-size="12" fill="#4a5a6a" text-anchor="middle">NEXT EXPERIMENT</text>
+      </svg>
+    </div>
+    <div class="sec-body">
+      <p>The aim: each new tool takes less time and money to develop than the last.</p>
     </div>
   </div>
 </section>
@@ -263,18 +450,19 @@
 <section class="block" id="team">
   <div class="wrap">
     <div class="sec-head">
-      <p class="mono num">03 / Team</p>
-      <h2>The person building it</h2>
+      <p class="mono num">05 / Team</p>
+      <h2>Who is building it</h2>
     </div>
     <div class="person">
       <h3>Bharath Reddy Adapa</h3>
       <span class="mono role">Founder</span>
+      <p class="bio">Over a decade in optics and precision measurement, most recently overlay measurement at ASML &mdash; where our roadmap leads.</p>
       <ul class="timeline">
-        <li>B.Tech, Engineering Physics — IIT Madras</li>
-        <li>Masters in Photonics (Europhotonics) — Aix-Marseille University and Karlsruhe Institute of Technology</li>
-        <li>PhD, Optical Metrology — European Synchrotron (ESRF), Grenoble. Thesis on applying wavefront sensing (Shack-Hartmann) to optical surface metrology</li>
-        <li>Postdoctoral Scientist — ESRF, Grenoble (2020–2022)</li>
-        <li>Optical Sensing Engineer — ASML, Veldhoven, Netherlands. YieldStar wafer overlay metrology (2022–2026)</li>
+        <li><b>ASML</b>, Veldhoven &mdash; Optical Sensing Engineer, YieldStar overlay measurement (2022&ndash;2026)</li>
+        <li><b>ESRF</b>, Grenoble &mdash; Postdoctoral Scientist (2020&ndash;2022)</li>
+        <li><b>ESRF and Imagine Optic</b> &mdash; PhD, optical metrology</li>
+        <li><b>Aix-Marseille University and KIT</b> &mdash; Masters in Photonics</li>
+        <li><b>IIT Madras</b> &mdash; B.Tech, Engineering Physics</li>
       </ul>
     </div>
   </div>
@@ -283,10 +471,10 @@
 <section class="block contact" id="contact">
   <div class="wrap">
     <div class="sec-head">
-      <p class="mono num">04 / Contact</p>
+      <p class="mono num">06 / Contact</p>
       <h2>Talk to us</h2>
     </div>
-    <p class="contact-company">Vikshepa Technologies Private Limited — Chennai, India<br>If you work with advanced packaging and want to talk about inspection or measurement, write or call.</p>
+    <p class="contact-company">Run a packaging line, a failure-analysis lab, or packaging research? Tell us what is hard to measure.</p>
     <div class="contact-grid">
       <div class="contact-item">
         <div class="mono k">Email</div>

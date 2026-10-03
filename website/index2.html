@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vikshepa Technologies — 3D AOI for Solder-Joint Inspection</title>
+<meta name="description" content="Vikshepa Technologies is developing a new-build 3D AOI system for solder-joint inspection, aimed at the accuracy class of established vendors at a cost mid-market and MSME EMS shops can afford.">
+<link rel="icon" type="image/png" href="assets/Vikshepa_logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a1420;
+    --bg-alt: #0f1e2e;
+    --panel: #12253a;
+    --border: #1e3550;
+    --text: #e7edf3;
+    --text-dim: #a8b8c8;
+    --accent: #3fa9ff;
+    --accent-dim: #2a6fa8;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+  h1, h2, h3 { font-weight: 700; margin: 0; line-height: 1.25; }
+  h1 { font-size: clamp(1.9rem, 4.2vw, 3rem); letter-spacing: -0.01em; }
+  h2 { font-size: clamp(1.5rem, 2.8vw, 2rem); letter-spacing: -0.01em; }
+  p { color: var(--text-dim); margin: 16px 0 0; font-size: 1.05rem; }
+  section { padding: 88px 0; border-top: 1px solid var(--border); }
+  section:first-of-type { border-top: none; }
+
+  /* header */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(10, 20, 32, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  header .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 14px; padding-bottom: 14px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand img { height: 34px; width: auto; display: block; }
+  .brand span {
+    font-weight: 700; font-size: 1.05rem; color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  nav { display: flex; gap: 28px; }
+  nav a { color: var(--text-dim); font-size: 0.94rem; font-weight: 500; }
+  nav a:hover { color: var(--text); }
+  .nav-cta {
+    color: var(--bg) !important;
+    background: var(--accent);
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-weight: 600 !important;
+  }
+  .nav-cta:hover { background: #5cb8ff; }
+  @media (max-width: 640px) {
+    nav a:not(.nav-cta) { display: none; }
+  }
+
+  /* hero */
+  .hero { padding: 96px 0 80px; }
+  .hero p.lede { font-size: 1.18rem; max-width: 680px; }
+  .hero-actions { margin-top: 32px; display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.98rem;
+  }
+  .btn-primary { background: var(--accent); color: #06121e; }
+  .btn-primary:hover { background: #5cb8ff; }
+  .btn-secondary { border: 1px solid var(--border); color: var(--text); }
+  .btn-secondary:hover { border-color: var(--accent-dim); }
+
+  /* problem stats */
+  .price-band {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .price-band > div { background: var(--panel); padding: 22px 24px; }
+  .price-band .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.5rem; font-weight: 500; color: var(--text);
+    display: block;
+  }
+  .price-band .label { font-size: 0.9rem; color: var(--text-dim); margin-top: 6px; display: block; }
+
+  /* approach list */
+  .approach-grid {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+  }
+  .approach-grid .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+  }
+  .approach-grid .card h3 { font-size: 1.05rem; color: var(--text); }
+  .approach-grid .card p { margin-top: 10px; font-size: 0.98rem; }
+
+  /* team */
+  .team-block {
+    margin-top: 32px;
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .team-block .name-block h3 { font-size: 1.3rem; color: var(--text); }
+  .team-block .name-block .role {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem; color: var(--accent); margin-top: 4px; display: block;
+  }
+  .credentials {
+    margin-top: 20px;
+    padding-left: 0;
+    list-style: none;
+    max-width: 640px;
+  }
+  .credentials li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 12px;
+    color: var(--text-dim);
+    font-size: 0.98rem;
+  }
+  .credentials li::before {
+    content: "";
+    position: absolute; left: 0; top: 9px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-dim);
+  }
+
+  /* contact */
+  .contact-grid {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  .contact-item { }
+  .contact-item .k {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .contact-item .v { margin-top: 6px; font-size: 1.08rem; color: var(--text); }
+  .contact-item .v a { color: var(--text); }
+  .contact-item .v a:hover { color: var(--accent); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+  }
+  footer .wrap {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer p { margin: 0; font-size: 0.88rem; color: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <img src="assets/Vikshepa_logo.png" alt="Vikshepa Technologies logo">
+      <span>Vikshepa Technologies</span>
+    </div>
+    <nav>
+      <a href="#problem">Problem</a>
+      <a href="#approach">Approach</a>
+      <a href="#team">Team</a>
+      <a href="#contact" class="nav-cta">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">3D Automated Optical Inspection</p>
+    <h1>3D AOI for solder-joint inspection, sized for mid-market EMS</h1>
+    <p class="lede">We're developing a new-build 3D AOI system aimed at the same accuracy class as established vendors — Koh Young, CyberOptics, TRI, Mirtec, Saki — built on off-the-shelf optics, cameras, and projection hardware instead of specialized proprietary components.</p>
+    <p>Built by an optical metrology engineer with a direct background in wafer overlay metrology (ASML) and synchrotron beamline instrumentation (ESRF).</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-primary">Get in touch</a>
+      <a href="#approach" class="btn btn-secondary">How we're building it</a>
+    </div>
+  </div>
+</section>
+
+<section id="problem">
+  <div class="wrap">
+    <p class="eyebrow">Problem</p>
+    <h2>The AOI gap in Indian EMS</h2>
+    <p>Established 3D AOI systems cost ₹15–80 lakh. That's a workable capital expense for large Tier-1 EMS and OEMs, but it prices out most MSME and mid-market shops.</p>
+    <p>The usual workaround is a used or desktop 3D AOI unit at ₹10–15 lakh, which trades away accuracy and support. For general SMT work that's often tolerable. For tight-tolerance work — automotive electronics under IATF 16949 — it's a real risk: marginal AOI coverage on joints where a miss has downstream cost.</p>
+    <p>Result: mid-market and MSME EMS shops in the Chennai-Bengaluru cluster either skip 3D AOI or run it on equipment that wasn't built for the tolerance band they're actually inspecting to.</p>
+
+    <div class="price-band">
+      <div>
+        <span class="num">₹15–80L</span>
+        <span class="label">Established 3D AOI vendors (Koh Young, CyberOptics, TRI, Mirtec, Saki)</span>
+      </div>
+      <div>
+        <span class="num">₹10–15L</span>
+        <span class="label">Used / desktop 3D AOI — weaker accuracy and support</span>
+      </div>
+      <div>
+        <span class="num">IATF 16949</span>
+        <span class="label">The tolerance standard that makes the gap costly for automotive-Tier work</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="approach">
+  <div class="wrap">
+    <p class="eyebrow">Approach</p>
+    <h2>Same accuracy class, different build</h2>
+    <p>We're building a new 3D AOI system aimed at the accuracy class of the established players, using off-the-shelf optics, cameras, and projection components instead of the specialized proprietary hardware that drives their cost. The target is a system priced for mid-market and MSME EMS budgets without cutting into inspection accuracy.</p>
+
+    <div class="approach-grid">
+      <div class="card">
+        <h3>Off-the-shelf optical hardware</h3>
+        <p>Commercial-grade optics, cameras, and a projector in place of vendor-proprietary sensor modules — the same measurement principle, a different cost structure.</p>
+      </div>
+      <div class="card">
+        <h3>Accuracy class as the design target</h3>
+        <p>The system is being designed and bench-validated against the accuracy class established vendors operate in, not a relaxed spec for a lower price point.</p>
+      </div>
+      <div class="card">
+        <h3>Built for the tolerance band that matters</h3>
+        <p>Development is aimed squarely at the tight-tolerance solder-joint inspection that automotive-Tier EMS work requires, not general-purpose SMT checks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="wrap">
+    <p class="eyebrow">Team</p>
+    <h2>Built by an optical metrology engineer</h2>
+    <div class="team-block">
+      <div class="name-block">
+        <h3>Bharath Reddy Adapa</h3>
+        <span class="role">Founder</span>
+      </div>
+      <ul class="credentials">
+        <li>B.Tech, Engineering Physics — IIT Madras</li>
+        <li>Masters in Photonics (Europhotonics) — Aix-Marseille University and Karlsruhe Institute of Technology</li>
+        <li>PhD, Optical Metrology — European Synchrotron (ESRF), Grenoble. Thesis on applying wavefront sensing (Shack-Hartmann) to optical surface metrology</li>
+        <li>Postdoctoral Scientist — ESRF, Grenoble (2020–2022)</li>
+        <li>Optical Sensing Engineer — ASML, Veldhoven, Netherlands. YieldStar wafer overlay metrology (2022–2026)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <p class="eyebrow">Contact</p>
+    <h2>Talk to us about your inspection requirements</h2>
+    <p>Vikshepa Technologies Private Limited — Chennai, India</p>
+
+    <div class="contact-grid">
+      <div class="contact-item">
+        <div class="k">Email</div>
+        <div class="v"><a href="mailto:bharath@vikshepa.in">bharath@vikshepa.in</a></div>
+      </div>
+      <div class="contact-item">
+        <div class="k">Phone</div>
+        <div class="v"><a href="tel:+918019226539">+91 80192 26539</a></div>
+      </div>
+      <div class="contact-item">
+        <div class="k">Location</div>
+        <div class="v">Chennai, Tamil Nadu, India</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>&copy; 2026 Vikshepa Technologies Private Limited</p>
+    <p>Chennai, India</p>
+  </div>
+</footer>
+
+</body>
+</html>
